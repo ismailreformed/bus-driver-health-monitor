@@ -257,26 +257,26 @@ export default {
           this.$axios
             .put("/driver/" + this.editedItem.id, this.editedItem)
             .then(response => {
-              // this.$toast.success("Data has been Updated");
+              this.$toast.success("Data has been Updated");
               Object.assign(this.drivers[this.editedIndex], this.editedItem);
               this.close();
             })
             .catch(error => {
               // this.setErrorMessages(error.response.data.errors)
-              // this.$toast.error(error.response.data.message)
+              this.$toast.error(error.response.data.message)
               console.log(error);
             });
         } else {
           this.$axios
             .post("/driver", this.editedItem)
             .then(response => {
-              // this.$toast.success("Data has been saved");
+              this.$toast.success("Data has been saved");
               this.drivers.push(response.data.data);
               this.close();
             })
             .catch(error => {
               // this.setErrorMessages(error.response.data.errors)
-              // this.$toast.error(error.response.data.message)
+              this.$toast.error(error.response.data.message)
               console.log(error);
             });
         }

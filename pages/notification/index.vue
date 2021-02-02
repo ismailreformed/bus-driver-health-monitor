@@ -50,7 +50,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="300px">
+        <!-- <v-dialog v-model="dialogDelete" max-width="300px">
           <v-card>
             <v-card-title class="headline"
               >Are you sure you want to delete this item?</v-card-title
@@ -59,7 +59,7 @@
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-dialog> -->
       </v-toolbar>
     </template>
 
@@ -132,9 +132,9 @@ export default {
     dialog(val) {
       val || this.close();
     },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
+    // dialogDelete(val) {
+    //   val || this.closeDelete();
+    // },
 
     searchQuery: {
       handler(nv, ov) {
@@ -182,7 +182,7 @@ export default {
     },
 
     closeDelete() {
-      this.dialogDelete = false;
+      // this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -194,14 +194,14 @@ export default {
         this.$axios
           .put('/notification/' + this.editedItem.id, this.editedItem)
           .then((response) => {
-            // this.$toast.success("Data has been Updated");
+              this.$toast.success("Data has been Updated");
               Object.assign(this.notifications[this.editedIndex], this.editedItem);
               this.initialize();
               this.close();
           })
           .catch(error => {
             // this.setErrorMessages(error.response.data.errors)
-            // this.$toast.error(error.response.data.message)
+            this.$toast.error(error.response.data.message)
             console.log(error);
           })
       } else {
