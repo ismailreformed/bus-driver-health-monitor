@@ -93,11 +93,18 @@ export default {
   data: () => ({
     dialog: false,
     headers: [
+      { text: "Channel", value: "channel" },
       { text: "Driver name", value: "driver_name" },
-      { text: "Current Situation", value: "status" },
       { text: "Driver License", value: "license" },
       { text: "Bus name", value: "name" },
       { text: "Bus plate no", value: "plate_no" },
+      { text: "Pulse", value: "pulse" },
+      { text: "Oxyzen", value: "oxygen" },
+      { text: "Temperature", value: "temperature" },
+      { text: "Emergency Button", value: "emergency_button" },
+      { text: "Robery Button", value: "robery_button" },
+      { text: "Latitude", value: "latitude" },
+      { text: "Lomgitude", value: "longitude" },
       { text: "Actions", value: "actions", sortable: false }
     ],
     editedIndex: -1,
@@ -149,8 +156,9 @@ export default {
   methods: {
     initialize() {
       this.$axios
-        .get("notification")
+        .get("/notification" + `?channel=1293855`)
         .then(response => {
+          console.log(response)
           this.notifications = response.data;
         })
         .catch(error => {
