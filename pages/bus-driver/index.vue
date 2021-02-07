@@ -39,14 +39,14 @@
                     </v-col>
                     <v-col cols="12" md="12">
                       <v-select
-                        v-model="editedItem.plate_no"
+                        v-model="editedItem.channel"
                         :items="buses"
-                        item-text="plate_no"
-                        item-value="id"
-                        return="id"
+                        item-text="channel"
+                        item-value="channel"
+                        return="channel"
                         outlined
                         hide-details="auto"
-                        label="Bus plate no"
+                        label="Bus Device Id"
                       />
                     </v-col>
                     <v-col cols="12" md="6">
@@ -62,7 +62,7 @@
                       md="6"
                     >
                       <v-select
-                        v-model="editedItem.status"
+                        v-model="editedItem.driving_status"
                         outlined
                         hide-details="auto"
                         :items="statuses"
@@ -107,17 +107,32 @@
       </v-toolbar>
     </template>
 
-    <template v-slot:item.status="{ item }">
+    <template v-slot:item.driving_status="{ item }">
       <v-chip
-        :color="getColor(item.status)"
+        :color="getColor(item.driving_status)"
         dark
         small
+        class="text-capitalize"
+      >
+        {{ item.driving_status }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.status="{ item }">
+      <v-chip
+        :color="getStatusColor(item.status)"
+        dark
+        small
+        class="text-capitalize"
       >
         {{ item.status }}
       </v-chip>
     </template>
 
     <template v-slot:item.actions="{ item }">
+      <v-btn :to="'/bus-driver/profile/' + item.id" class="mr-5" small outlined>
+      View
+      </v-btn>
       <v-icon small class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
@@ -147,24 +162,28 @@ export default {
       { text: "Driver name", value: "driver_name" },
       { text: "Bus plate no", value: "plate_no" },
       { text: "Bus name", value: "name" },
-      { text: "Status", value: "status" },
       { text: "Start Date", value: "startDate" },
+      { text: "Driving Status", value: "driving_status" },
+      { text: "Status", value: "status" },
       { text: "Actions", value: "actions", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
       driver_name: null,
-      plate_no: null,
+      plate_no: 1,
+      channel: null,
       startDate: null,
-      status: null
+      driving_status: null
     },
     defaultItem: {
       driver_name: null,
       plate_no: null,
+      channel: null,
       startDate: null,
-      status: null
+      driving_status: null
     },
-    statuses: ['On duty', 'Off duty'],
+
+    statuses: ['on-duty', 'leisure'],
     busDrivers: [],
     drivers:[],
     buses:[],
@@ -302,7 +321,19 @@ export default {
     },
 
     getColor (status) {
-      if (status === 'Safe') { return 'primary' } else { return 'red' }
+      if (status === 'on-duty') { return 'success' } else { return 'yellow' }
+    },
+
+    getStatusColor (status) {
+      if (status === 'safe') {
+         return 'success' 
+        }
+      else if(status === 'moderate') { 
+          return 'yellow darken-3' 
+        } 
+      else {
+        return 'danger'
+      }
     },
 
     getDriverLicense(){
@@ -311,6 +342,7 @@ export default {
         this.drivers = response.data;
       })
     },
+
     getBusPlateNo(){
       this.$axios.get('/bus')
       .then(response => {
